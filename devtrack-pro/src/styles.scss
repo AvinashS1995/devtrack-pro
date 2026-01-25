@@ -132,11 +132,11 @@ html, body {
 
 /* ================= FILTER ROW (FIX SR NO ISSUE) ================= */
 
-/* Apply SAME blue color to ALL filter row cells */
-.dx-datagrid .dx-filter-row td {
-  background-color: #2f2d7e !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-}
+// /* Apply SAME blue color to ALL filter row cells */
+// .dx-datagrid .dx-filter-row td {
+//   background-color: #2f2d7e !important;
+//   border-right: 1px solid rgba(255, 255, 255, 0.2);
+// }
 
 /* Filter row inputs & icons */
 .dx-datagrid .dx-filter-row td input,

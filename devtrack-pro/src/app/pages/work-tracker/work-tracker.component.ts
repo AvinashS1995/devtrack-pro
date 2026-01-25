@@ -1,6 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { SHARED_MATERIAL_MODULES } from '../../shared/common/shared-material';
 import { TopBarComponent } from '../../auth/top-bar/top-bar.component';
+import { DxDataGridComponent } from 'devextreme-angular';
+import { ApiService } from '../../shared/service/api.service';
+import { CommonService } from '../../shared/service/common.service';
+import { exportDataGrid } from 'devextreme/excel_exporter';
+import * as ExcelJS from 'exceljs';
+import saveAs from 'file-saver';
 
 export interface Work {
   date: string;
@@ -48,6 +54,8 @@ export interface Work {
   styleUrl: './work-tracker.component.scss',
 })
 export class WorkTrackerComponent {
+  @ViewChild(DxDataGridComponent) dataGrid!: DxDataGridComponent;
+
   works: Work[] = [];
   projects: string[] = ['HRMS', 'SFA', 'DevTrack'];
 
@@ -56,212 +64,208 @@ export class WorkTrackerComponent {
   completedCount = 0;
   totalHours = 0;
 
+  /* DROPDOWN DATA */
+  priorityList = [
+    { value: 'High', label: 'High' },
+    { value: 'Medium', label: 'Medium' },
+    { value: 'Low', label: 'Low' },
+  ];
+
+  statusList = [
+    { value: 'In Progress', label: 'In Progress' },
+    { value: 'Completed', label: 'Completed' },
+    { value: 'Blocked', label: 'Blocked' },
+  ];
+
+  yesNoList = [
+    { value: 'Yes', label: 'Yes' },
+    { value: 'No', label: 'No' },
+  ];
+
+  deployList = [
+    { value: 'Dev', label: 'Dev' },
+    { value: 'Staging', label: 'Staging' },
+    { value: 'Production', label: 'Production' },
+  ];
+
+  constructor(
+    private apiService: ApiService,
+    private commonService: CommonService,
+  ) {}
+
   ngOnInit(): void {
-    this.works = [
-      {
-        date: '2026-01-10',
-        projectName: 'HRMS',
-        moduleName: 'Leave',
-        taskName: 'Leave approval UI',
-        taskType: 'Feature',
-        priority: 'High',
-        jiraId: 'HRMS-101',
-        layer: 'UI',
-        frontendTech: 'Angular',
-        backendTech: 'Node.js',
-        componentOrApi: 'LeaveApprovalComponent',
-        apiIntegrated: 'Yes',
-        status: 'Completed',
-        estimatedHours: 6,
-        actualHours: 7,
-        blocker: 'No',
-        repo: 'hrms-ui',
-        branch: 'feature/leave-ui',
-        baseBranch: 'develop',
-        prNo: 'PR-45',
-        reviewer: 'Tech Lead',
-        prStatus: 'Merged',
-        mergeType: 'Squash',
-        mergeDate: '2026-01-12',
-        deployedTo: 'Staging',
-        deploymentDate: '2026-01-13',
-        deployedBy: 'CI/CD',
-        releaseVersion: 'v1.2.0',
-        verifiedBy: 'QA',
-        prodIssue: 'No',
-        prodIssueDesc: '',
-        fixApplied: '',
-        collaborationWith: 'Backend Team',
-        communicationMode: 'Teams',
-        remarks: 'Delivered on time',
-      },
-
-      {
-        date: '2026-01-11',
-        projectName: 'SFA',
-        moduleName: 'Orders',
-        taskName: 'Order list optimization',
-        taskType: 'Improvement',
-        priority: 'Medium',
-        jiraId: 'SFA-203',
-        layer: 'UI',
-        frontendTech: 'Angular',
-        backendTech: 'Java',
-        componentOrApi: 'OrderListComponent',
-        apiIntegrated: 'Yes',
-        status: 'In Progress',
-        estimatedHours: 5,
-        actualHours: 3,
-        blocker: 'API delay',
-        repo: 'sfa-ui',
-        branch: 'improve/order-list',
-        baseBranch: 'develop',
-        prNo: '',
-        reviewer: '',
-        prStatus: 'Pending',
-        mergeType: '',
-        mergeDate: '',
-        deployedTo: '',
-        deploymentDate: '',
-        deployedBy: '',
-        releaseVersion: '',
-        verifiedBy: '',
-        prodIssue: 'No',
-        prodIssueDesc: '',
-        fixApplied: '',
-        collaborationWith: 'API Team',
-        communicationMode: 'Slack',
-        remarks: 'Waiting for API fix',
-      },
-
-      {
-        date: '2026-01-12',
-        projectName: 'DevTrack',
-        moduleName: 'Tracker',
-        taskName: 'Work tracker grid',
-        taskType: 'Feature',
-        priority: 'High',
-        jiraId: 'DT-12',
-        layer: 'UI',
-        frontendTech: 'Angular',
-        backendTech: 'Node.js',
-        componentOrApi: 'WorkTrackerComponent',
-        apiIntegrated: 'No',
-        status: 'Completed',
-        estimatedHours: 8,
-        actualHours: 9,
-        blocker: 'No',
-        repo: 'devtrack-ui',
-        branch: 'feature/work-grid',
-        baseBranch: 'main',
-        prNo: 'PR-12',
-        reviewer: 'Architect',
-        prStatus: 'Merged',
-        mergeType: 'Rebase',
-        mergeDate: '2026-01-14',
-        deployedTo: 'Production',
-        deploymentDate: '2026-01-15',
-        deployedBy: 'DevOps',
-        releaseVersion: 'v1.0.0',
-        verifiedBy: 'Product Owner',
-        prodIssue: 'No',
-        prodIssueDesc: '',
-        fixApplied: '',
-        collaborationWith: 'Design Team',
-        communicationMode: 'Meeting',
-        remarks: 'Core feature completed',
-      },
-
-      {
-        date: '2026-01-13',
-        projectName: 'HRMS',
-        moduleName: 'Payroll',
-        taskName: 'Salary slip API',
-        taskType: 'API',
-        priority: 'High',
-        jiraId: 'HRMS-145',
-        layer: 'Backend',
-        frontendTech: '',
-        backendTech: 'Node.js',
-        componentOrApi: 'salarySlipAPI',
-        apiIntegrated: 'Yes',
-        status: 'Completed',
-        estimatedHours: 6,
-        actualHours: 6,
-        blocker: 'No',
-        repo: 'hrms-api',
-        branch: 'feature/salary-slip',
-        baseBranch: 'main',
-        prNo: 'PR-78',
-        reviewer: 'Backend Lead',
-        prStatus: 'Merged',
-        mergeType: 'Merge',
-        mergeDate: '2026-01-14',
-        deployedTo: 'Production',
-        deploymentDate: '2026-01-15',
-        deployedBy: 'CI/CD',
-        releaseVersion: 'v2.1.0',
-        verifiedBy: 'QA',
-        prodIssue: 'No',
-        prodIssueDesc: '',
-        fixApplied: '',
-        collaborationWith: 'Finance Team',
-        communicationMode: 'Email',
-        remarks: 'No issues',
-      },
-      ...Array.from({ length: 6 }).map((_, i) => ({
-        date: `2026-01-${16 + i}`,
-        projectName: 'DevTrack',
-        moduleName: 'Reports',
-        taskName: `Report enhancement ${i + 1}`,
-        taskType: 'Enhancement',
-        priority: 'Low',
-        jiraId: `DT-${20 + i}`,
-        layer: 'UI',
-        frontendTech: 'Angular',
-        backendTech: 'Node.js',
-        componentOrApi: 'ReportsModule',
-        apiIntegrated: 'Yes',
-        status: i % 2 === 0 ? 'Completed' : 'In Progress',
-        estimatedHours: 4,
-        actualHours: i % 2 === 0 ? 4 : 2,
-        blocker: 'No',
-        repo: 'devtrack-ui',
-        branch: 'feature/reports',
-        baseBranch: 'main',
-        prNo: '',
-        reviewer: '',
-        prStatus: '',
-        mergeType: '',
-        mergeDate: '',
-        deployedTo: '',
-        deploymentDate: '',
-        deployedBy: '',
-        releaseVersion: '',
-        verifiedBy: '',
-        prodIssue: 'No',
-        prodIssueDesc: '',
-        fixApplied: '',
-        collaborationWith: 'QA',
-        communicationMode: 'Teams',
-        remarks: 'Minor changes',
-      })),
-    ];
-
-    this.calculateKpis();
+    this.loadWorks();
+    this.loadKpis();
   }
 
-  calculateKpis(): void {
-    this.totalEntries = this.works.length;
-    this.inProgressCount = this.works.filter(
-      (w) => w.status === 'In Progress',
-    ).length;
-    this.completedCount = this.works.filter(
-      (w) => w.status === 'Completed',
-    ).length;
-    this.totalHours = this.works.reduce(
-      (sum, w) => sum + (w.actualHours || 0),
-      0,
-    );
+  loadWorks() {
+    this.apiService
+      .GetWorkTrackings({
+        empNo: this.commonService.getCurrentUserDetails().empNo || '',
+      })
+      .subscribe((res) => {
+        this.works = res.data || [];
+      });
+  }
+
+  loadKpis() {
+    this.apiService
+      .GetWorkTrackingsKPI({
+        empNo: this.commonService.getCurrentUserDetails().empNo || '',
+      })
+      .subscribe((res) => {
+        const kpi = res.data;
+        this.totalEntries = kpi.totalEntries;
+        this.inProgressCount = kpi.inProgressCount;
+        this.completedCount = kpi.completedCount;
+        this.totalHours = kpi.totalHours;
+      });
+  }
+
+  onRowInserted(e: any) {
+    const payload = {
+      date: e.data.date || '',
+      projectName: e.data.projectName || '',
+      moduleName: e.data.moduleName || '',
+      taskName: e.data.taskName || '',
+      taskType: e.data.taskType || '',
+      priority: e.data.priority || '',
+      jiraId: e.data.jiraId || '',
+
+      layer: e.data.layer || '',
+      frontendTech: e.data.frontendTech || '',
+      backendTech: e.data.backendTech || '',
+      componentOrApi: e.data.componentOrApi || '',
+      apiIntegrated: e.data.apiIntegrated || '',
+
+      status: e.data.status || '',
+      estimatedHours: e.data.estimatedHours || 0,
+      actualHours: e.data.actualHours || 0,
+
+      startDate: e.data.startDate || '',
+      endDate: e.data.endDate || '',
+
+      blocker: e.data.blocker || '',
+
+      repo: e.data.repo || '',
+      branch: e.data.branch || '',
+      baseBranch: e.data.baseBranch || '',
+      prNo: e.data.prNo || '',
+      reviewer: e.data.reviewer || '',
+      prStatus: e.data.prStatus || '',
+      mergeType: e.data.mergeType || '',
+      mergeDate: e.data.mergeDate || '',
+
+      deployedTo: e.data.deployedTo || '',
+      deploymentDate: e.data.deploymentDate || '',
+      deployedBy: e.data.deployedBy || '',
+      releaseVersion: e.data.releaseVersion || '',
+      verifiedBy: e.data.verifiedBy || '',
+
+      prodIssue: e.data.prodIssue || '',
+      prodIssueDesc: e.data.prodIssueDesc || '',
+      fixApplied: e.data.fixApplied || '',
+
+      collaborationWith: e.data.collaborationWith || '',
+      communicationMode: e.data.communicationMode || '',
+      remarks: e.data.remarks || '',
+
+      empNo: this.commonService.getCurrentUserDetails().empNo || '',
+    };
+
+    console.log('INSERT PAYLOAD', payload);
+
+    this.apiService.SaveWorkTrackings(payload).subscribe(() => {
+      this.loadKpis();
+    });
+  }
+
+  onRowUpdated(e: any) {
+    const payload = {
+      id: e.key || '',
+      date: e.data.date || '',
+      projectName: e.data.projectName || '',
+      moduleName: e.data.moduleName || '',
+      taskName: e.data.taskName || '',
+      taskType: e.data.taskType || '',
+      priority: e.data.priority || '',
+      jiraId: e.data.jiraId || '',
+
+      layer: e.data.layer || '',
+      frontendTech: e.data.frontendTech || '',
+      backendTech: e.data.backendTech || '',
+      componentOrApi: e.data.componentOrApi || '',
+      apiIntegrated: e.data.apiIntegrated || '',
+
+      status: e.data.status || '',
+      estimatedHours: e.data.estimatedHours || 0,
+      actualHours: e.data.actualHours || 0,
+
+      startDate: e.data.startDate || '',
+      endDate: e.data.endDate || '',
+
+      blocker: e.data.blocker || '',
+
+      repo: e.data.repo || '',
+      branch: e.data.branch || '',
+      baseBranch: e.data.baseBranch || '',
+      prNo: e.data.prNo || '',
+      reviewer: e.data.reviewer || '',
+      prStatus: e.data.prStatus || '',
+      mergeType: e.data.mergeType || '',
+      mergeDate: e.data.mergeDate || '',
+
+      deployedTo: e.data.deployedTo || '',
+      deploymentDate: e.data.deploymentDate || '',
+      deployedBy: e.data.deployedBy || '',
+      releaseVersion: e.data.releaseVersion || '',
+      verifiedBy: e.data.verifiedBy || '',
+
+      prodIssue: e.data.prodIssue || '',
+      prodIssueDesc: e.data.prodIssueDesc || '',
+      fixApplied: e.data.fixApplied || '',
+
+      collaborationWith: e.data.collaborationWith || '',
+      communicationMode: e.data.communicationMode || '',
+      remarks: e.data.remarks || '',
+    };
+
+    console.log('Update PAYLOAD', payload);
+
+    this.apiService.UpdateWorkTrackings(payload).subscribe(() => {
+      this.loadKpis();
+    });
+  }
+
+  onRowRemoved(e: any) {
+    const payload = {
+      id: e.key || '',
+    };
+
+    console.log('DELETE PAYLOAD', payload);
+
+    this.apiService.DeleteWorkTrackings(payload).subscribe(() => {
+      this.loadKpis();
+    });
+  }
+
+  onExporting(e: any) {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Work Tracker');
+
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      autoFilterEnabled: true,
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(
+          new Blob([buffer], { type: 'application/octet-stream' }),
+          `Work_Tracker_${new Date().toISOString().slice(0, 10)}.xlsx`,
+        );
+      });
+    });
+
+    e.cancel = true;
   }
 }

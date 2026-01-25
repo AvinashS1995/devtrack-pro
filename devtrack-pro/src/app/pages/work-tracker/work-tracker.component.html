@@ -74,20 +74,15 @@
                 <input matInput placeholder="Search..." />
             </mat-form-field>
 
-            <!-- <div class="filter-actions">
-                <button mat-flat-button color="primary">Apply</button>
-                <button mat-stroked-button color="primary">Clear</button>
-            </div> -->
+            <div class="button-row">
+                <button mat-flat-button color="primary" class="btn-primary" type="button">
+                    Apply
+                </button>
 
-             <div class="button-row">
-                    <button mat-flat-button color="primary" class="btn-primary" type="button">
-                        Apply
-                    </button>
-
-                    <button mat-raised-button color="primary" class="btn-secondary" type="button">
-                        Clear
-                    </button>
-                </div>
+                <button mat-raised-button color="primary" class="btn-secondary" type="button">
+                    Clear
+                </button>
+            </div>
         </div>
     </mat-expansion-panel>
 
@@ -95,10 +90,22 @@
         <dx-data-grid id="grid_work_tracker" class="grid_work_tracker" [dataSource]="works" [remoteOperations]="false"
             [wordWrapEnabled]="true" [showBorders]="true" [showColumnLines]="true" [showRowLines]="true"
             [rowAlternationEnabled]="true" [allowColumnReordering]="true" [allowColumnResizing]="true"
-            [columnAutoWidth]="true">
+            [columnAutoWidth]="true" (onRowInserted)="onRowInserted($event)" (onRowUpdated)="onRowUpdated($event)"
+            (onRowRemoved)="onRowRemoved($event)" (onExporting)="onExporting($event)">
+
+            <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"
+                [useIcons]="true">
+            </dxo-editing>
+
+            <dxo-toolbar>
+                <dxi-item name="addRowButton" location="after"></dxi-item>
+                <dxi-item name="exportButton" location="after"></dxi-item>
+                <dxi-item name="searchPanel"></dxi-item>
+            </dxo-toolbar>
 
             <dxo-export [enabled]="true" fileName="Work_Tracker_Report">
             </dxo-export>
+
 
             <dxo-paging [pageSize]="5" [enabled]="true"></dxo-paging>
             <dxo-pager [showInfo]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[10,20,50,100]">
@@ -109,28 +116,45 @@
 
             <dxo-column-chooser [enabled]="true" mode="select"></dxo-column-chooser>
             <dxo-sorting mode="multiple"></dxo-sorting>
-            <dxo-header-filter [visible]="true"></dxo-header-filter>
-            <dxo-filter-row [visible]="true" applyFilter="auto"></dxo-filter-row>
 
-            <dxi-column dataField="date" caption="Date" dataType="date" alignment="center"></dxi-column>
+            <dxi-column dataField="date" caption="Date" dataType="date" format="dd/MM/yyyy"
+                alignment="center"></dxi-column>
+
             <dxi-column dataField="projectName" caption="Project" alignment="center"></dxi-column>
             <dxi-column dataField="moduleName" caption="Module" alignment="center"></dxi-column>
             <dxi-column dataField="taskName" caption="Task" alignment="center"></dxi-column>
             <dxi-column dataField="taskType" caption="Task Type" alignment="center"></dxi-column>
-            <dxi-column dataField="priority" caption="Priority" alignment="center"></dxi-column>
+
+            <dxi-column dataField="priority" caption="Priority">
+                <dxo-lookup [dataSource]="priorityList" valueExpr="value" displayExpr="label">
+                </dxo-lookup>
+            </dxi-column>
+
             <dxi-column dataField="jiraId" caption="Jira ID" alignment="center"></dxi-column>
 
             <dxi-column dataField="layer" caption="Layer" alignment="center"></dxi-column>
             <dxi-column dataField="frontendTech" caption="Frontend Tech" alignment="center"></dxi-column>
             <dxi-column dataField="backendTech" caption="Backend Tech" alignment="center"></dxi-column>
             <dxi-column dataField="componentOrApi" caption="Component / API" alignment="center"></dxi-column>
-            <dxi-column dataField="apiIntegrated" caption="API Integrated" alignment="center"></dxi-column>
 
-            <dxi-column dataField="status" caption="Status" alignment="center"></dxi-column>
+            <dxi-column dataField="apiIntegrated" caption="API Integrated">
+                <dxo-lookup [dataSource]="yesNoList" valueExpr="value" displayExpr="label">
+                </dxo-lookup>
+            </dxi-column>
+
+            <dxi-column dataField="status" caption="Status">
+                <dxo-lookup [dataSource]="statusList" valueExpr="value" displayExpr="label">
+                </dxo-lookup>
+            </dxi-column>
+
             <dxi-column dataField="estimatedHours" caption="Est. Hours" dataType="number"
                 alignment="center"></dxi-column>
             <dxi-column dataField="actualHours" caption="Actual Hours" dataType="number"
                 alignment="center"></dxi-column>
+
+            <dxi-column dataField="startDate" caption="Start Date" dataType="date" format="dd/MM/yyyy"></dxi-column>
+            <dxi-column dataField="endDate" caption="End Date" dataType="date" format="dd/MM/yyyy"></dxi-column>
+
             <dxi-column dataField="blocker" caption="Blocker" alignment="center"></dxi-column>
 
             <dxi-column dataField="repo" caption="Repository" alignment="center"></dxi-column>
@@ -140,10 +164,15 @@
             <dxi-column dataField="reviewer" caption="Reviewer" alignment="center"></dxi-column>
             <dxi-column dataField="prStatus" caption="PR Status" alignment="center"></dxi-column>
             <dxi-column dataField="mergeType" caption="Merge Type" alignment="center"></dxi-column>
-            <dxi-column dataField="mergeDate" caption="Merge Date" dataType="date" alignment="center"></dxi-column>
+            <dxi-column dataField="mergeDate" caption="Merge Date" dataType="date" format="dd/MM/yyyy"
+                alignment="center"></dxi-column>
 
-            <dxi-column dataField="deployedTo" caption="Deployed To" alignment="center"></dxi-column>
-            <dxi-column dataField="deploymentDate" caption="Deployment Date" dataType="date"
+            <dxi-column dataField="deployedTo" caption="Deployed To">
+                <dxo-lookup [dataSource]="deployList" valueExpr="value" displayExpr="label">
+                </dxo-lookup>
+            </dxi-column>
+
+            <dxi-column dataField="deploymentDate" caption="Deployment Date" dataType="date" format="dd/MM/yyyy"
                 alignment="center"></dxi-column>
             <dxi-column dataField="deployedBy" caption="Deployed By" alignment="center"></dxi-column>
             <dxi-column dataField="releaseVersion" caption="Release Version" alignment="center"></dxi-column>
@@ -156,7 +185,6 @@
             <dxi-column dataField="collaborationWith" caption="Collaboration With" alignment="center"></dxi-column>
             <dxi-column dataField="communicationMode" caption="Communication Mode" alignment="center"></dxi-column>
             <dxi-column dataField="remarks" caption="Remarks" alignment="center"></dxi-column>
-
 
         </dx-data-grid>
     </div>

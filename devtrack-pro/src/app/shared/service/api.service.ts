@@ -22,4 +22,38 @@ export class ApiService {
       payload,
     );
   }
+
+  SaveWorkTrackings(payload: any): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}${API_ENDPOINTS.SERVICE_SAVE_WORK_TRACKINGS}`,
+      payload,
+    );
+  }
+
+  GetWorkTrackingsKPI(payload: any): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}${API_ENDPOINTS.SERVICE_GET_WORK_TRACKINGS_KPI}`,
+      payload,
+    );
+  }
+
+  GetWorkTrackings(payload: any): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}${API_ENDPOINTS.SERVICE_GET_WORK_TRACKINGS}`,
+      payload,
+    );
+  }
+  UpdateWorkTrackings(payload: any): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}${API_ENDPOINTS.SERVICE_UPDATE_WORK_TRACKINGS}`,
+      payload,
+    );
+  }
+
+  DeleteWorkTrackings(payload: any): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}${API_ENDPOINTS.SERVICE_DELETE_WORK_TRACKINGS}`,
+      payload,
+    );
+  }
 }
