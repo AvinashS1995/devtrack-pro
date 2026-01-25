@@ -1,0 +1,177 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the theme object.
+$devtrack-pro-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+:root {
+  @include mat.all-component-themes($devtrack-pro-theme);
+}
+
+// Comment out the line below if you want to use the pre-defined typography utility classes.
+// For more information: https://material.angular.io/guide/typography#using-typography-styles-in-your-application.
+// @include mat.typography-hierarchy($devtrack-pro-theme);
+
+// Comment out the line below if you want to use the deprecated `color` inputs.
+// @include mat.color-variants-backwards-compatibility($devtrack-pro-theme);
+/* You can add global styles to this file, and also import other style files */
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  color: var(--text-main);
+  background-color: #eef2ff;
+}
+
+.app-layout {
+  padding-top: 64px;
+  min-height: 100vh;
+}
+
+
+.app-container {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+
+/* ===============================
+   SaaS Theme Variables
+================================ */
+:root {
+  --primary: #2563eb;        
+  --primary-dark: #1e40af;
+  --secondary: #64748b;     
+  --success: #16a34a;
+  --warning: #f59e0b;
+  --danger: #dc2626;
+
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --border-color: #e5e7eb;
+
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+
+  --radius: 12px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.mdc-snackbar__label{
+  padding: 0 !important;
+}
+
+.mat-mdc-snack-bar-container .mat-mdc-snackbar-surface{
+  padding: 0px !important;
+}
+
+/* ======================================================
+   DEVEXTREME – HEADER + FILTER ROW (FINAL FIX)
+====================================================== */
+
+.dx-table {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Grid container */
+.dx-datagrid {
+  background: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* ================= HEADER ROW ================= */
+.dx-datagrid-headers {
+  background-color: #2f2d7e !important;
+}
+
+.dx-datagrid-headers .dx-header-row > td {
+  background-color: #2f2d7e !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Header text */
+.dx-datagrid-text-content {
+  color: #ffffff !important;
+}
+
+/* Sort & filter icons */
+.dx-header-filter,
+.dx-sort {
+  color: #ffffff !important;
+  opacity: 0.9;
+}
+
+/* ================= FILTER ROW (FIX SR NO ISSUE) ================= */
+
+/* Apply SAME blue color to ALL filter row cells */
+.dx-datagrid .dx-filter-row td {
+  background-color: #2f2d7e !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Filter row inputs & icons */
+.dx-datagrid .dx-filter-row td input,
+.dx-datagrid .dx-filter-row td .dx-icon {
+  color: #ffffff !important;
+}
+
+/* Hide filter UI under Sr. No column */
+.dx-datagrid .dx-filter-row td:first-child {
+  pointer-events: none;
+}
+
+.dx-datagrid .dx-filter-row td:first-child .dx-icon,
+.dx-datagrid .dx-filter-row td:first-child input {
+  display: none !important;
+}
+
+/* ================= SR NO ROW ALIGNMENT ================= */
+.sr-no-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  height: 100%;
+}
+
+/* ================= ROW ALTERNATION ================= */
+.dx-datagrid-rowsview .dx-row-alt {
+  background-color: #f8fafc;
+}
+
+/* ================= NO DATA ================= */
+.dx-datagrid-nodata {
+  color: #9ca3af;
+  font-size: 18px;
+  font-weight: 500;
+}
+

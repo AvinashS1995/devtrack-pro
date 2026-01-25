@@ -1,0 +1,61 @@
+<div class="topbar">
+  <div class="right-actions">
+   
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="userMenu"
+      class="avatar-btn"
+    >
+      <div class="avatar-circle">
+        {{ user.initials }}
+      </div>
+    </button>
+
+    <mat-menu
+      #userMenu="matMenu"
+      class="user-menu"
+      xPosition="before"
+      yPosition="below"
+    >
+      <div class="user-card">
+
+        <div class="avatar-lg">
+          {{ user.initials }}
+
+          <button
+            mat-mini-fab
+            class="edit-btn"
+            (click)="goToProfile()"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+
+        <h2 class="user-name">{{ user.name }}</h2>
+        <div class="emp-no">{{ user.empNo }}</div>
+
+        <div class="roles">{{ user.roles }}</div>
+        <div class="divisions">{{ user.divisions }}</div>
+
+        <div class="icon-actions">
+          <button mat-icon-button>
+            <mat-icon>mail</mat-icon>
+          </button>
+          <button mat-icon-button>
+            <mat-icon>call</mat-icon>
+          </button>
+        </div>
+
+        <button
+          mat-stroked-button
+          color="primary"
+          class="signout-btn"
+          (click)="logout()"
+        >
+          Signout
+        </button>
+
+      </div>
+    </mat-menu>
+  </div>
+</div>

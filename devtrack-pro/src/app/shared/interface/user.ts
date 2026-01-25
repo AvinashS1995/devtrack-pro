@@ -1,0 +1,30 @@
+export interface UserDetails {
+  _id: string;
+  empNo: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  dob: string;
+  gender: string;
+  email: string;
+  mobile: string;
+  address: string;
+  country: string;
+  role: string;
+  roleId: number;
+  type: string;
+  status: string;
+  reportedBy: string;
+  designation: string;
+  department: string;
+  joiningDate: string;
+  salary: number;
+  workType: string;
+  bankName: string;
+  bankAccNo: string;
+  pfNo: string;
+  uan: string;
+  pan: string;
+  profileImage: string;
+  loginUserSecretkey: string;
+}

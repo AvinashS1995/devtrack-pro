@@ -1,0 +1,119 @@
+<div class="profile-page">
+
+    <div class="profile-banner">
+        <div class="profile-avatar">
+            {{ user.initials }}
+
+            <button mat-mini-fab class="edit-avatar">
+                <mat-icon>edit</mat-icon>
+            </button>
+        </div>
+
+        <h2>{{ user.name }}</h2>
+        <p class="emp-no">{{ user.empNo }}</p>
+        <p class="designation">
+            {{ user.role }} · {{ user.department }}
+        </p>
+    </div>
+
+    <div class="profile-content">
+
+        <div class="summary-grid">
+
+            <div class="summary-card">
+                <mat-icon>work</mat-icon>
+                <div>
+                    <span>Role</span>
+                    <strong>{{ user.role }}</strong>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <mat-icon>apartment</mat-icon>
+                <div>
+                    <span>Department</span>
+                    <strong>{{ user.department }}</strong>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <mat-icon>event</mat-icon>
+                <div>
+                    <span>Joined On</span>
+                    <strong>{{ user.joinDate }}</strong>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <mat-icon>place</mat-icon>
+                <div>
+                    <span>Location</span>
+                    <strong>{{ user.location }}</strong>
+                </div>
+            </div>
+
+        </div>
+
+        <form [formGroup]="profileForm">
+
+            <mat-card class="profile-card">
+
+                <h3>
+                    <mat-icon color="primary">person</mat-icon>
+                    Personal Information
+                </h3>
+
+                <div class="form-grid">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Full Name</mat-label>
+                        <input matInput formControlName="name">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Mobile</mat-label>
+                        <input matInput formControlName="phone">
+                    </mat-form-field>
+                </div>
+
+                <h3>
+                    <mat-icon color="primary">work</mat-icon>
+                    Work Information
+                </h3>
+
+                <div class="form-grid">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Role</mat-label>
+                        <input matInput formControlName="role">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Department</mat-label>
+                        <input matInput formControlName="department">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Location</mat-label>
+                        <input matInput formControlName="location">
+                    </mat-form-field>
+                </div>
+
+                <div class="actions">
+                    <button mat-flat-button color="primary" (click)="saveProfile()">
+                        Save Changes
+                    </button>
+                    <button mat-stroked-button color="primary">
+                        Cancel
+                    </button>
+                </div>
+
+            </mat-card>
+
+        </form>
+
+    </div>
+</div>

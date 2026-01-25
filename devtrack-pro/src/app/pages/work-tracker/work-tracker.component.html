@@ -1,0 +1,164 @@
+<div class="tracker-page">
+
+    <div class="kpi-grid">
+
+        <mat-card class="kpi-card primary">
+            <div class="kpi-header">
+                <mat-icon>assignment</mat-icon>
+                <span>Total Entries</span>
+            </div>
+            <h2>{{ totalEntries }}</h2>
+            <p class="kpi-sub">Since start of tracking</p>
+        </mat-card>
+
+        <mat-card class="kpi-card warning">
+            <div class="kpi-header">
+                <mat-icon>autorenew</mat-icon>
+                <span>In Progress</span>
+            </div>
+            <h2>{{ inProgressCount }}</h2>
+            <p class="kpi-sub">Currently being worked on</p>
+        </mat-card>
+
+        <mat-card class="kpi-card success">
+            <div class="kpi-header">
+                <mat-icon>check_circle</mat-icon>
+                <span>Completed</span>
+            </div>
+            <h2>{{ completedCount }}</h2>
+            <p class="kpi-sub">Delivered successfully</p>
+        </mat-card>
+
+        <mat-card class="kpi-card info">
+            <div class="kpi-header">
+                <mat-icon>schedule</mat-icon>
+                <span>Total Hours</span>
+            </div>
+            <h2>{{ totalHours }}</h2>
+            <p class="kpi-sub">Actual effort logged</p>
+        </mat-card>
+
+    </div>
+
+    <mat-expansion-panel expanded>
+        <mat-expansion-panel-header>
+            <mat-panel-title>Filter / Search</mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="filters">
+            <mat-form-field appearance="outline">
+                <mat-label>From Date</mat-label>
+                <input matInput [matDatepicker]="fromPicker">
+                <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                <mat-datepicker #fromPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>To Date</mat-label>
+                <input matInput [matDatepicker]="toPicker">
+                <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+                <mat-datepicker #toPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Project</mat-label>
+                <mat-select>
+                    <mat-option *ngFor="let p of projects" [value]="p">
+                        {{ p }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Search</mat-label>
+                <input matInput placeholder="Search..." />
+            </mat-form-field>
+
+            <!-- <div class="filter-actions">
+                <button mat-flat-button color="primary">Apply</button>
+                <button mat-stroked-button color="primary">Clear</button>
+            </div> -->
+
+             <div class="button-row">
+                    <button mat-flat-button color="primary" class="btn-primary" type="button">
+                        Apply
+                    </button>
+
+                    <button mat-raised-button color="primary" class="btn-secondary" type="button">
+                        Clear
+                    </button>
+                </div>
+        </div>
+    </mat-expansion-panel>
+
+    <div class="dx-table" style="margin-top: 10px;">
+        <dx-data-grid id="grid_work_tracker" class="grid_work_tracker" [dataSource]="works" [remoteOperations]="false"
+            [wordWrapEnabled]="true" [showBorders]="true" [showColumnLines]="true" [showRowLines]="true"
+            [rowAlternationEnabled]="true" [allowColumnReordering]="true" [allowColumnResizing]="true"
+            [columnAutoWidth]="true">
+
+            <dxo-export [enabled]="true" fileName="Work_Tracker_Report">
+            </dxo-export>
+
+            <dxo-paging [pageSize]="5" [enabled]="true"></dxo-paging>
+            <dxo-pager [showInfo]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[10,20,50,100]">
+            </dxo-pager>
+
+            <dxo-search-panel [visible]="true" [width]="240" placeholder="Search..." [highlightCaseSensitive]="true">
+            </dxo-search-panel>
+
+            <dxo-column-chooser [enabled]="true" mode="select"></dxo-column-chooser>
+            <dxo-sorting mode="multiple"></dxo-sorting>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-filter-row [visible]="true" applyFilter="auto"></dxo-filter-row>
+
+            <dxi-column dataField="date" caption="Date" dataType="date" alignment="center"></dxi-column>
+            <dxi-column dataField="projectName" caption="Project" alignment="center"></dxi-column>
+            <dxi-column dataField="moduleName" caption="Module" alignment="center"></dxi-column>
+            <dxi-column dataField="taskName" caption="Task" alignment="center"></dxi-column>
+            <dxi-column dataField="taskType" caption="Task Type" alignment="center"></dxi-column>
+            <dxi-column dataField="priority" caption="Priority" alignment="center"></dxi-column>
+            <dxi-column dataField="jiraId" caption="Jira ID" alignment="center"></dxi-column>
+
+            <dxi-column dataField="layer" caption="Layer" alignment="center"></dxi-column>
+            <dxi-column dataField="frontendTech" caption="Frontend Tech" alignment="center"></dxi-column>
+            <dxi-column dataField="backendTech" caption="Backend Tech" alignment="center"></dxi-column>
+            <dxi-column dataField="componentOrApi" caption="Component / API" alignment="center"></dxi-column>
+            <dxi-column dataField="apiIntegrated" caption="API Integrated" alignment="center"></dxi-column>
+
+            <dxi-column dataField="status" caption="Status" alignment="center"></dxi-column>
+            <dxi-column dataField="estimatedHours" caption="Est. Hours" dataType="number"
+                alignment="center"></dxi-column>
+            <dxi-column dataField="actualHours" caption="Actual Hours" dataType="number"
+                alignment="center"></dxi-column>
+            <dxi-column dataField="blocker" caption="Blocker" alignment="center"></dxi-column>
+
+            <dxi-column dataField="repo" caption="Repository" alignment="center"></dxi-column>
+            <dxi-column dataField="branch" caption="Branch" alignment="center"></dxi-column>
+            <dxi-column dataField="baseBranch" caption="Base Branch" alignment="center"></dxi-column>
+            <dxi-column dataField="prNo" caption="PR No" alignment="center"></dxi-column>
+            <dxi-column dataField="reviewer" caption="Reviewer" alignment="center"></dxi-column>
+            <dxi-column dataField="prStatus" caption="PR Status" alignment="center"></dxi-column>
+            <dxi-column dataField="mergeType" caption="Merge Type" alignment="center"></dxi-column>
+            <dxi-column dataField="mergeDate" caption="Merge Date" dataType="date" alignment="center"></dxi-column>
+
+            <dxi-column dataField="deployedTo" caption="Deployed To" alignment="center"></dxi-column>
+            <dxi-column dataField="deploymentDate" caption="Deployment Date" dataType="date"
+                alignment="center"></dxi-column>
+            <dxi-column dataField="deployedBy" caption="Deployed By" alignment="center"></dxi-column>
+            <dxi-column dataField="releaseVersion" caption="Release Version" alignment="center"></dxi-column>
+            <dxi-column dataField="verifiedBy" caption="Verified By" alignment="center"></dxi-column>
+
+            <dxi-column dataField="prodIssue" caption="Prod Issue" alignment="center"></dxi-column>
+            <dxi-column dataField="prodIssueDesc" caption="Prod Issue Description" alignment="center"></dxi-column>
+            <dxi-column dataField="fixApplied" caption="Fix Applied" alignment="center"></dxi-column>
+
+            <dxi-column dataField="collaborationWith" caption="Collaboration With" alignment="center"></dxi-column>
+            <dxi-column dataField="communicationMode" caption="Communication Mode" alignment="center"></dxi-column>
+            <dxi-column dataField="remarks" caption="Remarks" alignment="center"></dxi-column>
+
+
+        </dx-data-grid>
+    </div>
+
+</div>
