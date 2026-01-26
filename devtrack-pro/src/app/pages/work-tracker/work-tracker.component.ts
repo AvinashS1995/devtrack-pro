@@ -7,6 +7,25 @@ import { CommonService } from '../../shared/service/common.service';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import * as ExcelJS from 'exceljs';
 import saveAs from 'file-saver';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'DD/MM/YYYY',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 export interface Work {
   date: string;
@@ -52,6 +71,14 @@ export interface Work {
   imports: [SHARED_MATERIAL_MODULES, TopBarComponent],
   templateUrl: './work-tracker.component.html',
   styleUrl: './work-tracker.component.scss',
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+  ],
 })
 export class WorkTrackerComponent {
   @ViewChild(DxDataGridComponent) dataGrid!: DxDataGridComponent;
@@ -63,6 +90,8 @@ export class WorkTrackerComponent {
   inProgressCount = 0;
   completedCount = 0;
   totalHours = 0;
+
+  filterForm!: FormGroup;
 
   /* DROPDOWN DATA */
   priorityList = [
@@ -91,21 +120,37 @@ export class WorkTrackerComponent {
   constructor(
     private apiService: ApiService,
     private commonService: CommonService,
+    private fb: FormBuilder,
   ) {}
 
   ngOnInit(): void {
-    this.loadWorks();
+    // this.loadWorks();
+    this.initFilterForm();
+    this.applyFilter();
     this.loadKpis();
   }
 
+  initFilterForm() {
+    this.filterForm = this.fb.group({
+      fromDate: [null],
+      toDate: [null],
+      project: [''],
+      name: [''], // search text
+    });
+  }
+
   loadWorks() {
-    this.apiService
-      .GetWorkTrackings({
-        empNo: this.commonService.getCurrentUserDetails().empNo || '',
-      })
-      .subscribe((res) => {
-        this.works = res.data || [];
-      });
+    const { fromDate, toDate, project, name } = this.filterForm.getRawValue();
+    const payload = {
+      empNo: this.commonService.getCurrentUserDetails().empNo || '',
+      fromDate: fromDate || '',
+      toDate: toDate || '',
+      project: project || '',
+      search: name || '',
+    };
+    this.apiService.GetWorkTrackings(payload).subscribe((res) => {
+      this.works = res.data || [];
+    });
   }
 
   loadKpis() {
@@ -267,5 +312,13 @@ export class WorkTrackerComponent {
     });
 
     e.cancel = true;
+  }
+
+  applyFilter() {
+    this.loadWorks();
+  }
+
+  clearFilter() {
+    this.filterForm.reset();
   }
 }
