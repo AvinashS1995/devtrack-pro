@@ -9,16 +9,14 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { authInterceptor } from './shared/interceptor/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimationsAsync(),
-    provideHttpClient(
-      withFetch(),
-      // withInterceptors([authInterceptor])
-    ),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     provideNativeDateAdapter(),
   ],
 };

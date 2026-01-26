@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonService } from '../../shared/service/common.service';
 import { UserDetails } from '../../shared/interface/user';
 import { Subject, takeUntil } from 'rxjs';
+import { ApiService } from '../../shared/service/api.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -26,6 +27,7 @@ export class TopBarComponent {
   constructor(
     private commonService: CommonService,
     private router: Router,
+    private apiService: ApiService,
   ) {}
 
   ngOnInit(): void {
@@ -54,11 +56,11 @@ export class TopBarComponent {
     this.router.navigate(['/profile']);
   }
 
-  logout(): void {
-    this.commonService.clearUserDetails();
-    localStorage.clear();
-    this.router.navigate(['/login']);
-  }
+  // logout(): void {
+  //   this.commonService.clearUserDetails();
+  //   localStorage.clear();
+  //   this.router.navigate(['/login']);
+  // }
 
   private buildFullName(user: UserDetails): string {
     return [user.firstName, user.middleName, user.lastName]
@@ -68,5 +70,20 @@ export class TopBarComponent {
 
   private getInitials(user: UserDetails): string {
     return user.firstName ? user.firstName.charAt(0).toUpperCase() : '';
+  }
+
+  logout() {
+    this.apiService.LogOut({}).subscribe({
+      next: (res: any) => {
+        sessionStorage.removeItem('token');
+        sessionStorage.clear();
+        this.commonService.clearUserDetails();
+        this.commonService.openSnackbar(res.message, 'success');
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        this.commonService.openSnackbar(error.error.message, 'error');
+      },
+    });
   }
 }

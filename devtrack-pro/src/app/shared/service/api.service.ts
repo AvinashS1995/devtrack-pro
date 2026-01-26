@@ -23,6 +23,13 @@ export class ApiService {
     );
   }
 
+  LogOut(payload: any): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}${API_ENDPOINTS.SERVICE_LOG_OUT}`,
+      payload,
+    );
+  }
+
   SaveWorkTrackings(payload: any): Observable<any> {
     return this.http.post<any>(
       `${this.baseUrl}${API_ENDPOINTS.SERVICE_SAVE_WORK_TRACKINGS}`,

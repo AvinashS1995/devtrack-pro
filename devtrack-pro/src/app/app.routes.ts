@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './pages/layout/layout.component';
+import { authGuard } from './shared/guard/auth.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -12,6 +13,7 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: 'work-tracker',
