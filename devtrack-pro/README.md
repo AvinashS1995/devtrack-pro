@@ -47,7 +47,7 @@ A developer-focused tracker that captures daily work entries, KPIs, and deployme
 
 1. **Clone repository**
    ```bash
-   git clone <repo-url>
+   git clone <https://github.com/AvinashS1995/devtrack-pro.git>
    ```
 2. **Install dependencies**
    ```bash
@@ -93,7 +93,7 @@ src/app/
 
 ## Demo / Deployment
 
-- **Live demo:** <DEMO_LINK>
+- **Live demo:** <https://devtrack-pro-theta.vercel.app/login>
 - **Screenshots:** Add polished walkthrough images under `public/assets/screenshots` (or link to your CMS) and update this section with captions.
 - **Deployment tips:** Build for production via `npm run build` and host the output from `dist/` on any static server; ensure `environment.prod.ts` points to the right API.
 

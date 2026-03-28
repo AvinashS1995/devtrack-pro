@@ -47,7 +47,7 @@ A developer-focused tracker that captures daily work entries, KPIs, and deployme
 
 1. **Clone repository**
    ```bash
-   git clone <repo-url>
+   git clone <https://github.com/AvinashS1995/devtrack-pro.git>
    ```
 2. **Install dependencies**
    ```bash
