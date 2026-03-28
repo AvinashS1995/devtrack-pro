@@ -93,8 +93,8 @@ src/app/
 
 ## Demo / Deployment
 
-- **Live demo:** https://devtrack-pro-theta.vercel.app/login
-- **Screenshots:** Add polished walkthrough images under `public/assets/screenshots` (or link to your CMS) and update this section with captions.
+- **Live demo:** [https://devtrack-pro-theta.vercel.app/login](https://devtrack-pro-theta.vercel.app/login)
+- **Screenshots:** Add polished walkthrough images under `public/assets/screenshots` (or link to your CMS) and update this section with captions. ![App preview](public/assets/devtrackpro-screenshot.png)
 - **Deployment tips:** Build for production via `npm run build` and host the output from `dist/` on any static server; ensure `environment.prod.ts` points to the right API.
 
 ## Contributing
